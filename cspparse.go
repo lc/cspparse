@@ -69,6 +69,7 @@ func getCSPApi(domain string) string {
 	}
 	url := "https://csp-evaluator.withgoogle.com/getCSP"
 	// make the request
+	req.SetTimeout(2 * 1000 * 1000 * 1000)
 	r, err := req.Post(url, params)
 	if err != nil {
 		fmt.Printf("Error making request:\n%s\n", err)
@@ -143,6 +144,7 @@ func getCSPHtml(domain string) string {
 func request(url string) string {
 	// make a GET request to the target domain / URL
 	if url != "" {
+		req.SetTimeout(2 * 1000 * 1000 * 1000)
 		r, err := req.Get(url)
 
 		if err != nil {
