@@ -32,17 +32,17 @@ type cspStatus struct {
 
 // define a map of lists (with type string)
 // globally so any function can access it
-var cspObject map[string][]string
+var cspObject map[string]interface{}
 
 func main() {
 	// initialize the cspObject map
-	cspObject = make(map[string][]string)
+	cspObject = make(map[string]interface{})
 	//adding objects to the map cspObject
 	// this specific data is to make the output
 	// valid ReconJSON
-	cspObject["type"] = append(make([]string, 0), "ServiceDescriptor")
-	cspObject["name"] = append(make([]string, 0), "Content-Security-Policy")
-	cspObject["location"] = append(make([]string, 0), "Header")
+	cspObject["type"] = "ServiceDescriptor"
+	cspObject["name"] = "Content-Security-Policy"
+	cspObject["location"] = "Header"
 	// if user passes a command line argument (the domain  / url to check)
 	if len(os.Args) > 1 {
 		// set the variable to the first argument passed
