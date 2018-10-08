@@ -41,7 +41,7 @@ func main() {
 	// this specific data is to make the output
 	// valid ReconJSON
 	cspObject["type"] = "ServiceDescriptor"
-	cspObject["name"] = "Content-Security-Policy"
+	cspObject["name"] = "httpCsp"
 	cspObject["location"] = "Header"
 	// if user passes a command line argument (the domain  / url to check)
 	if len(os.Args) > 1 {
