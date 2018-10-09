@@ -4,7 +4,7 @@ package main
 -====== CSP Parser ======-
 by: Corben Leo (https://corben.io)
 Contributor(s):
-- Riley Johnson (http://therileyjohnson.com)
+- Riley Johnson (https://therileyjohnson.com)
 
 %% Description:
 > Gets Content-Security-Policies for given URL / Domain.
