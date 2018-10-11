@@ -16,11 +16,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/imroc/req"
+	"github.com/pkg/errors"
 )
 
 // create a struct (a collection of fields) to
@@ -37,76 +41,85 @@ var cspObject map[string]interface{}
 func main() {
 	// initialize the cspObject map
 	cspObject = make(map[string]interface{})
-	//adding objects to the map cspObject
-	// this specific data is to make the output
-	// valid ReconJSON
+
+	// adding objects to the map cspObject, this
+	// specific data is to make the output valid ReconJSON
 	cspObject["type"] = "ServiceDescriptor"
 	cspObject["name"] = "httpCsp"
 	cspObject["location"] = "Header"
+
 	// if user passes a command line argument (the domain  / url to check)
 	if len(os.Args) > 1 {
+
 		// set the variable to the first argument passed
 		domain := os.Args[1]
+
 		// pass the domains to our functions
 		getCSPApi(domain)
 		getCSPHtml(domain)
+
 		// dump the map into pretty json
 		bytes, _ := json.MarshalIndent(cspObject, "", "    ")
+
 		// print it to the user
 		fmt.Println(string(bytes))
 	} else {
-		// if no domain or url is passed
-		// show the usage to the user.
+		// if no domain or url is passed show the usage to the user.
 		fmt.Println("[+] Usage: cspparse https://www.facebook.com")
 	}
 }
 
-func getCSPApi(domain string) string {
+func getCSPApi(domain string) (string, error) {
 	// set the parameters of the POST request
 	// to url=<domain>
-	params := req.Param{
-		"url": domain,
-	}
-	url := "https://csp-evaluator.withgoogle.com/getCSP"
+	client := &http.Client{Timeout: 2 * time.Second}
+
+	// params := req.Param{
+	// 	"url": domain,
+	// }
+
+	requestURL := fmt.Sprintf("https://csp-evaluator.withgoogle.com/getCSP?url=%s", url.QueryEscape(domain))
+
 	// make the request
-	req.SetTimeout(2 * 1000 * 1000 * 1000)
-	r, err := req.Post(url, params)
+	// req.SetTimeout(2 * 1000 * 1000 * 1000)
+
+	// r, err := req.Post("https://csp-evaluator.withgoogle.com/getCSP", params)
+	resp, err := client.Get(requestURL)
+
 	if err != nil {
-		fmt.Printf("Error making request:\n%s\n", err)
-		os.Exit(1)
+		return "", errors.Wrap(err, "error making request")
 	}
 
-	resp := r.Response()
-	// close the connection
+	// Defer closing the connection
 	defer resp.Body.Close()
-	// declare the variable c with the type
-	// cspStatus (from the struct on line 29)
+
 	var c cspStatus
-	// JSON Decode Google's CSP response from JSON
-	// into the struct
+
+	// JSON Decode Google's CSP response from JSON into the struct
 	err = json.NewDecoder(resp.Body).Decode(&c)
 
 	if err != nil {
-		fmt.Printf("Error decoding response JSON:\n%s\n", err)
-		os.Exit(1)
+		return "", errors.Wrap(err, "error decoding response JSON")
 	}
 
-	// check if Google gave us status:"ok"
-	// which implies there is a CSP.
+	// If Google gave us status:"ok" there is a CSP.
 	if c.Status == "ok" {
-		// split the CSP into rules by the ; separator
+		// Rules are ';' delimited, split the CSP by ';' into rules
 		cspResult := strings.Split(c.Csp, ";")
+
 		for _, result := range cspResult {
 			if result != "" {
-				// split the rule by the first space to get valid JSON
+				// Split the rule by the first space to get valid JSON
 				rules := strings.Split(result, " ")
+
 				// ex: default-src * data: blob:; -> "default-src": ["*","data:","blob:"],
 				cspObject[rules[0]] = append(make([]string, 0), rules[1:]...)
 			}
 		}
 
 	}
-	return ""
+
+	return "", errors.New("no CSP for the domain given")
 }
 func getCSPHtml(domain string) string {
 	// set the variable to the response body
