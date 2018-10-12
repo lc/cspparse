@@ -12,7 +12,7 @@ cspparse is a tool to evaluate Content Security Policies. It uses Google's API t
 
 ```bash
 
-~ ❯ go get -u https://github.com/C0RB3N/cspparse
+~ ❯ go get -u github.com/C0RB3N/cspparse
 
 ```
 
