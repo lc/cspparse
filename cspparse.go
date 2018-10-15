@@ -117,7 +117,9 @@ func getCSPApi(domain string) error {
 	}
 
 	// Rules are ';' delimited, split the CSP by ';' into rules
-	cspResult := strings.Split(cspStatus.Csp, ";")
+	// occasionally they are delimited by '; ', so we replace it
+	catch := strings.Replace(cspStatus.Csp, "; ", ";", -1)
+	cspResult := strings.Split(catch, ";")
 
 	for _, result := range cspResult {
 		if result != "" {
