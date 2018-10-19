@@ -56,14 +56,12 @@ func main() {
 		err = getCSPApi(domain)
 
 		if err != nil {
-			fmt.Println(errors.Wrap(err, "could not get CSP information from Google API"))
-			os.Exit(1)
 		}
 
 		err = getCSPHtml(domain)
 
 		if err != nil {
-			fmt.Println(errors.Wrap(err, "could not get CSP information from domain HTML"))
+			fmt.Println(errors.Wrap(err, "No CSP // Could not retrieve CSP Information"))
 			os.Exit(1)
 		}
 
