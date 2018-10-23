@@ -43,7 +43,7 @@ func main() {
 		cspObject, err = getCSPMap(domain)
 
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(errors.Wrap(err, "could not retrieve CSP Information"))
 			os.Exit(1)
 		}
 
@@ -98,7 +98,9 @@ func getCSPApi(domain string, cspObject map[string]interface{}) error {
 	}
 
 	// Rules are ';' delimited, split the CSP by ';' into rules
-	cspResult := strings.Split(cspStatus.Csp, ";")
+	// occasionally they are delimited by '; ', so we replace it
+	catch := strings.Replace(cspStatus.Csp, "; ", ";", -1)
+	cspResult := strings.Split(catch, ";")
 
 	for _, result := range cspResult {
 		if result != "" {
