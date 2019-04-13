@@ -8,11 +8,11 @@ cspparse is a tool to evaluate Content Security Policies. It uses Google's API t
 
 ### Install Command and Download Source With Go Get
 
-```cspparse``` command will be installed to ```$GOPATH/bin``` and the source code (from ```https://github.com/C0RB3N/cspparse```) will be found in ```$GOPATH/src/github.com/C0RB3N/cspparse``` with:
+```cspparse``` command will be installed to ```$GOPATH/bin``` and the source code (from ```https://github.com/lc/cspparse```) will be found in ```$GOPATH/src/github.com/lc/cspparse``` with:
 
 ```bash
 
-~ ❯ go get -u github.com/C0RB3N/cspparse
+~ ❯ go get -u github.com/lc/cspparse
 
 ```
 
@@ -20,7 +20,7 @@ cspparse is a tool to evaluate Content Security Policies. It uses Google's API t
 
 ```bash
 
-~ ❯ git clone https://github.com/C0RB3N/cspparse
+~ ❯ git clone https://github.com/lc/cspparse
 ~ ❯ cd cspparse
 ~ ❯ chmod +x install.sh && ./install.sh
 
