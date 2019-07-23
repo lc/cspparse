@@ -46,13 +46,13 @@ cspparse is a tool to evaluate Content Security Policies. It uses Google's API t
 
 ```bash
 
-~ > docker build -t cssparse .
+~ > docker build -t cspparse .
 ```
 
 Run
 ```bash
 
-~ > docker run --rm -t cssparse <domain / url>
+~ > docker run --rm -t cspparse <domain / url>
 ```
 
 
