@@ -16,13 +16,13 @@ cspparse is a tool to evaluate Content Security Policies. It uses Google's API t
 
 ```
 
-### Install from Github Source
+### Install from Source
 
 ```bash
 
 ~ ❯ git clone https://github.com/lc/cspparse
 ~ ❯ cd cspparse
-~ ❯ chmod +x install.sh && ./install.sh
+~ ❯ go build 
 
 ```
 
